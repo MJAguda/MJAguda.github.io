@@ -9,6 +9,7 @@ export const profile = {
   email: 'mark.jayson.aguda@gmail.com',
   resume: '/Mark-Jayson-Aguda-Resume.pdf',
   socials: [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mark-jayson-a-a0b9b5148/', mark: 'in' },
     { label: 'GitHub', href: 'https://github.com/MJAguda' },
     { label: 'YouTube', href: 'https://www.youtube.com/@mjdminer4079' },
   ],
