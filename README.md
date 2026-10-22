@@ -1,6 +1,6 @@
 # mjaguda.github.io
 
-Personal portfolio of **Mark Jayson Aguda**, Full-Stack Developer (Laravel, Vue, React & AI integrations).
+Personal portfolio of **Mark Jayson Aguda**, Software Engineer (AI integrations, Laravel, Vue & React).
 
 Built with [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com), deployed to GitHub Pages by GitHub Actions. Hosting costs $0.
 

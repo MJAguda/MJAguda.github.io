@@ -1,16 +1,27 @@
 ---
 title: PGIAuto
-tagline: An automotive business platform for dealer management, inventory, classified listings and reporting.
+tagline: Three automotive and business management apps for one client, covering dealer management, internal operations and automotive classifieds.
 role: Full-stack development
-tech: [PHP, Yii, Vue.js, React, JavaScript, MySQL]
+tech: [PHP, Yii, Vue.js, React, jQuery, MySQL, Highcharts, Docker, CircleCI, Google Cloud Storage, AWS Elastic Beanstalk]
 order: 2
 status: client-work
 note: Client work, details on request
 ---
 
-PGIAuto helps automotive businesses manage their dealerships, inventory and classified listings, and report on all of it.
+I worked across three applications for the same client, from the database to the UI.
 
-## What I did
+## Admin and dealer app
 
-- Built features across the backend and frontend, including **reporting dashboards**, **search** and **notifications**.
-- Worked on **database design and query tuning** in MySQL.
+- Features for **dealer operations, inventory management** and administrative workflows, built with PHP (Yii), Vue.js and jQuery.
+- **Advanced filtering, reporting** and **notification** systems.
+- **Database design and query tuning** in MySQL.
+- File storage on **Google Cloud Storage** and deployment on **AWS Elastic Beanstalk**, with Docker-based environments and CircleCI pipelines.
+
+## Internal management app
+
+- **Data visualisation dashboards** with Highcharts, in a React and jQuery frontend.
+- Asset builds with Webpack and Grunt, and responsive layouts.
+
+## Automotive classifieds platform
+
+- Backend logic and frontend features for **ad posting, user management, search and filtering**, and notifications.

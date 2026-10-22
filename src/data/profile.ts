@@ -2,10 +2,10 @@
 
 export const profile = {
   name: 'Mark Jayson Aguda',
-  role: 'Full-Stack Developer',
-  focus: 'Laravel, Vue, React & AI Integrations',
+  role: 'Software Engineer',
+  focus: 'AI Integrations · Laravel, Vue & React',
   pitch:
-    'Full-stack developer with 3+ years building web, mobile and backend applications. I ship production APIs, admin tools and AI features, from database design to the UI.',
+    'Software engineer with 4+ years building web, mobile and backend applications. I ship production APIs, admin tools and AI features like a conversational assistant on AWS Bedrock, from database design to the UI.',
   email: 'mark.jayson.aguda@gmail.com',
   resume: '/Mark-Jayson-Aguda-Resume.pdf',
   socials: [
@@ -21,7 +21,7 @@ export const skills: Record<string, string[]> = {
   'Cloud & DevOps': ['AWS (Elastic Beanstalk, S3, Bedrock)', 'Firebase', 'Docker', 'CircleCI', 'Git'],
   'Testing & Monitoring': ['Pest', 'JUnit', 'Playwright', 'Sentry'],
   AI: ['Claude Code', 'GitHub Copilot', 'AWS Bedrock', 'Agent workflows', 'Custom skills', 'MCP servers'],
-  Mobile: ['Android (Java)'],
+  Mobile: ['Android (Java)', 'Jetpack Compose'],
 };
 
 export const experience = [
@@ -30,11 +30,11 @@ export const experience = [
     title: 'Software Engineer',
     period: 'Oct 2023 – Present',
     summary:
-      'Full-stack work on Laravel and Yii platforms with Vue.js and React frontends: REST APIs, search, notifications, third-party and AWS integrations, CI/CD and Dockerized environments.',
+      'Full-stack work on Laravel and Yii platforms with Vue.js and React frontends: REST APIs, an AI shopping assistant on AWS Bedrock, notification, analytics and marketing integrations, Docker overhauls, framework upgrades and CI pipelines.',
   },
   {
     company: 'Collabera Technologies',
-    title: 'Java Application Developer',
+    title: 'Java EE Application Developer',
     period: 'May 2023 – Sep 2023',
     summary:
       'Built backend services and REST APIs with Java and Spring Boot, using test-driven development with JUnit and Spring Security for authentication.',
