@@ -1,6 +1,6 @@
 ---
 title: Condolense
-tagline: An AI-powered lead finder for condo buyers.
+tagline: An AI-powered lead finder for real estate agents.
 role: Personal project
 tech: [Laravel, PHP, AI]
 order: 3
@@ -10,4 +10,4 @@ links:
     href: https://github.com/MJAguda/condolense
 ---
 
-Condolense uses AI to find leads for condo buyers.
+Condolense uses AI to help real estate agents find leads.
