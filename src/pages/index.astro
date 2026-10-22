@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { profile, skills, experience, education } from '../data/profile';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+
+const button = 'inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium transition';
+const sectionTitle = 'text-2xl font-bold tracking-tight';
+---
+
+<Layout>
+  <section class="py-20 sm:py-28">
+    <p class="font-medium text-accent dark:text-accent-soft">Hi, I'm</p>
+    <h1 class="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">{profile.name}</h1>
+    <p class="mt-3 text-xl text-zinc-900 sm:text-2xl dark:text-zinc-100">
+      {profile.role} <span class="text-zinc-500">· {profile.focus}</span>
+    </p>
+    <p class="mt-6 max-w-2xl leading-relaxed">{profile.pitch}</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href={profile.resume} download class={`${button} bg-accent text-white hover:opacity-90`}>Download résumé</a>
+      <a href={`mailto:${profile.email}`} class={`${button} border border-zinc-300 hover:border-accent dark:border-zinc-700`}>Email me</a>
+      {profile.socials.map((s) => (
+        <a href={s.href} class={`${button} border border-zinc-300 hover:border-accent dark:border-zinc-700`}>{s.label}</a>
+      ))}
+    </div>
+  </section>
+
+  <section id="projects" class="scroll-mt-20 py-12">
+    <h2 class={sectionTitle}>Projects</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+
+  <section id="skills" class="scroll-mt-20 py-12">
+    <h2 class={sectionTitle}>Skills</h2>
+    <dl class="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-[10rem_1fr]">
+      {Object.entries(skills).map(([group, items]) => (
+        <>
+          <dt class="font-semibold text-zinc-900 dark:text-zinc-100">{group}</dt>
+          <dd class="-mt-4 sm:mt-0">{items.join(' · ')}</dd>
+        </>
+      ))}
+    </dl>
+  </section>
+
+  <section id="experience" class="scroll-mt-20 py-12">
+    <h2 class={sectionTitle}>Experience</h2>
+    <ol class="mt-6 space-y-8 border-l border-zinc-200 pl-6 dark:border-zinc-800">
+      {experience.map((job) => (
+        <li class="relative">
+          <span class="absolute -left-[1.85rem] top-1.5 size-3 rounded-full border-2 border-accent bg-white dark:bg-zinc-950"></span>
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h3 class="font-semibold">{job.title} · {job.company}</h3>
+            <p class="text-sm text-zinc-500">{job.period}</p>
+          </div>
+          <p class="mt-2 leading-relaxed">{job.summary}</p>
+        </li>
+      ))}
+    </ol>
+
+    <h3 class="mt-12 text-lg font-semibold">Education</h3>
+    <ul class="mt-4 space-y-3">
+      {education.map((e) => (
+        <li class="flex flex-wrap items-baseline justify-between gap-x-4">
+          <span>
+            <span class="font-medium text-zinc-900 dark:text-zinc-100">{e.degree}</span>, {e.school}
+            {e.note && <span class="block text-sm text-zinc-500">{e.note}</span>}
+          </span>
+          <span class="text-sm text-zinc-500">{e.period}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section id="contact" class="scroll-mt-20 py-12">
+    <h2 class={sectionTitle}>Contact</h2>
+    <p class="mt-4 max-w-2xl leading-relaxed">
+      I'm open to full-stack and backend roles. The quickest way to reach me is email.
+    </p>
+    <a href={`mailto:${profile.email}`} class="mt-4 inline-block text-lg font-medium text-accent underline underline-offset-4 dark:text-accent-soft">
+      {profile.email}
+    </a>
+  </section>
+</Layout>
