@@ -5,6 +5,8 @@ import ProjectCard from '../components/ProjectCard.astro';
 import SkillChips from '../components/SkillChips.astro';
 import TechTags from '../components/TechTags.astro';
 import { siGithub, siYoutube, type SimpleIcon } from 'simple-icons';
+import { Image } from 'astro:assets';
+import photo from '../assets/mark-jayson-aguda.jpg';
 import { profile, about, skills, experience, education, teaching } from '../data/profile';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -38,8 +40,19 @@ const sectionTitle = 'font-mono text-2xl font-bold tracking-tight';
 
   <section id="about" class="scroll-mt-20 py-12">
     <h2 class={sectionTitle} data-reveal><span aria-hidden="true" class="text-accent dark:text-accent-soft">{'// '}</span><span class="lowercase">About</span></h2>
-    <div class="mt-6 max-w-2xl space-y-4 leading-relaxed">
-      {about.map((paragraph) => <p data-reveal>{paragraph}</p>)}
+    <div class="mt-6 flex flex-col gap-6 sm:flex-row-reverse sm:items-start sm:gap-10">
+      <Image
+        src={photo}
+        alt={`Portrait of ${profile.name}`}
+        width={160}
+        height={160}
+        densities={[1, 2]}
+        class="size-32 shrink-0 rounded-full border-2 border-accent object-cover sm:size-40 dark:border-accent-soft"
+        data-reveal=""
+      />
+      <div class="max-w-2xl space-y-4 leading-relaxed">
+        {about.map((paragraph) => <p data-reveal>{paragraph}</p>)}
+      </div>
     </div>
   </section>
 

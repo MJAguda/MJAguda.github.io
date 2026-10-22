@@ -35,6 +35,8 @@ const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.jpg', Astro.site)} />
+    <meta property="og:image:alt" content={`Portrait of ${profile.name}`} />
     <meta name="twitter:card" content="summary" />
 
     <script is:inline>
