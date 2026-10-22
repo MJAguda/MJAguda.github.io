@@ -16,7 +16,7 @@ const badge = {
 }[status ?? 'live'];
 ---
 
-<article class="group relative flex flex-col rounded-xl border border-zinc-200 bg-zinc-50 p-5 transition hover:border-accent dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-accent-soft">
+<article class="group relative flex flex-col rounded-xl border border-zinc-200 bg-zinc-50 p-5 transition hover:border-accent dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-accent-soft" data-reveal>
   <div class="flex items-start justify-between gap-3">
     <h3 class="text-lg font-semibold">
       <a href={`/projects/${project.id}/`} class="after:absolute after:inset-0">{title}</a>
