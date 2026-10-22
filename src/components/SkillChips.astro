@@ -1,0 +1,43 @@
+---
+import {
+  siAndroid, siBootstrap, siCircleci, siClaude, siCss, siDocker, siFirebase, siFlutter, siGit,
+  siGithubcopilot, siGooglecloud, siHtml5, siJavascript, siJetpackcompose, siJquery, siJunit5,
+  siLaravel, siModelcontextprotocol, siMysql, siNodedotjs, siOpenjdk, siPhp, siPosthog, siReact,
+  siRedis, siSentry, siSpringboot, siTypescript, siVuedotjs, siYii,
+  type SimpleIcon,
+} from 'simple-icons';
+
+interface Props {
+  items: string[];
+}
+
+// Simple Icons has no logos for AWS, Typesense, Pest or Playwright; those render as text only.
+const icons: Record<string, SimpleIcon> = {
+  PHP: siPhp, Laravel: siLaravel, Yii: siYii, Java: siOpenjdk, 'Spring Boot': siSpringboot,
+  'Node.js': siNodedotjs, JavaScript: siJavascript, TypeScript: siTypescript, 'Vue.js': siVuedotjs,
+  React: siReact, jQuery: siJquery, HTML5: siHtml5, CSS3: siCss, Bootstrap: siBootstrap,
+  MySQL: siMysql, Redis: siRedis, 'Google Cloud Platform': siGooglecloud, Firebase: siFirebase,
+  Docker: siDocker, CircleCI: siCircleci, Git: siGit, JUnit: siJunit5, Sentry: siSentry,
+  PostHog: siPosthog, 'Claude Code': siClaude, 'GitHub Copilot': siGithubcopilot,
+  'MCP servers': siModelcontextprotocol, 'Flutter (Dart)': siFlutter, 'Android (Java)': siAndroid,
+  'Jetpack Compose': siJetpackcompose,
+};
+
+const { items } = Astro.props;
+---
+
+<ul class="flex flex-wrap gap-2">
+  {items.map((item) => {
+    const icon = icons[item];
+    return (
+      <li class="inline-flex items-center gap-1.5 rounded-md border border-zinc-200 px-2 py-1 text-sm dark:border-zinc-800">
+        {icon && (
+          <svg class="size-4 shrink-0 fill-current text-zinc-500 dark:text-zinc-400" viewBox="0 0 24 24" aria-hidden="true">
+            <path d={icon.path} />
+          </svg>
+        )}
+        {item}
+      </li>
+    );
+  })}
+</ul>

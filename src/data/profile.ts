@@ -18,10 +18,15 @@ export const skills: Record<string, string[]> = {
   Backend: ['PHP', 'Laravel', 'Yii', 'Java', 'Spring Boot', 'Node.js', 'REST APIs'],
   Frontend: ['JavaScript', 'TypeScript', 'Vue.js', 'React', 'jQuery', 'HTML5', 'CSS3', 'Bootstrap'],
   Data: ['MySQL', 'Redis', 'Typesense'],
-  'Cloud & DevOps': ['AWS (Elastic Beanstalk, S3, Bedrock)', 'Firebase', 'Docker', 'CircleCI', 'Git'],
-  'Testing & Monitoring': ['Pest', 'JUnit', 'Playwright', 'Sentry'],
+  'Cloud & DevOps': ['AWS (Elastic Beanstalk, S3, Bedrock)', 'Google Cloud Platform', 'Firebase', 'Docker', 'CircleCI', 'Git'],
+  'Testing, Monitoring & Analytics': ['Pest', 'JUnit', 'Playwright', 'Sentry', 'PostHog'],
   AI: ['Claude Code', 'GitHub Copilot', 'AWS Bedrock', 'Agent workflows', 'Custom skills', 'MCP servers'],
-  Mobile: ['Android (Java)', 'Jetpack Compose'],
+  Mobile: ['Flutter (Dart)', 'Android (Java)', 'Jetpack Compose'],
+};
+
+// Shown under a skill group's label.
+export const skillNotes: Record<string, string> = {
+  AI: "L4 ★★ Power User on Full Scale's 5-level AI framework",
 };
 
 export const experience = [
