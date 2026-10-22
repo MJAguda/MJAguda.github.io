@@ -5,13 +5,19 @@
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --color-accent: oklch(0.55 0.15 180);
-  --color-accent-soft: oklch(0.75 0.12 180);
+  /* Terminal green. `accent` is the light-theme value, `accent-soft` the dark-theme value (sRGB hex so contrast is exact). */
+  --color-accent: #166534;
+  --color-accent-soft: #4ade80;
+}
+
+/* JetBrains Mono from Astro's Fonts API (<Font> in Layout.astro defines --font-jetbrains on :root). */
+@theme inline {
+  --font-mono: var(--font-jetbrains);
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    @apply scheme-light motion-safe:scroll-smooth dark:scheme-dark;
   }
 
   body {
@@ -23,7 +29,7 @@
   }
 
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-accent;
+    @apply outline-2 outline-offset-2 outline-accent dark:outline-accent-soft;
   }
 }
 
@@ -35,4 +41,25 @@
   & ul { @apply list-disc space-y-2 pl-5; }
   & a { @apply text-accent underline underline-offset-2 dark:text-accent-soft; }
   & strong { @apply font-semibold text-zinc-900 dark:text-zinc-100; }
+}
+
+/* Terminal cursor after the hero prompt. It blinks only when the visitor allows motion. */
+.prompt-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 0.2em;
+  vertical-align: text-bottom;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .prompt-cursor::after {
+    animation: blink 1s steps(1) infinite;
+  }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }

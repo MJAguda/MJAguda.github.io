@@ -9,6 +9,6 @@ const { tech, class: className } = Astro.props;
 
 <ul class:list={['flex flex-wrap gap-1.5', className]}>
   {tech.map((t) => (
-    <li class="rounded-md bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent dark:bg-accent-soft/10 dark:text-accent-soft">{t}</li>
+    <li class="rounded-md bg-accent/10 px-2 py-0.5 font-mono text-xs font-medium text-accent dark:bg-accent-soft/10 dark:text-accent-soft">{t}</li>
   ))}
 </ul>

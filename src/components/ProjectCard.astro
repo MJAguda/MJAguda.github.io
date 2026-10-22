@@ -16,16 +16,16 @@ const badge = {
 }[status ?? 'live'];
 ---
 
-<article class="group relative flex flex-col rounded-xl border border-zinc-200 p-5 transition hover:border-accent dark:border-zinc-800 dark:hover:border-accent-soft">
+<article class="group relative flex flex-col rounded-xl border border-zinc-200 bg-zinc-50 p-5 transition hover:border-accent dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-accent-soft">
   <div class="flex items-start justify-between gap-3">
     <h3 class="text-lg font-semibold">
       <a href={`/projects/${project.id}/`} class="after:absolute after:inset-0">{title}</a>
     </h3>
     {badge && (
-      <span class="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs dark:bg-zinc-800">{badge}</span>
+      <span class="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 font-mono text-xs dark:bg-zinc-800">{badge}</span>
     )}
   </div>
-  <p class="mt-1 text-sm text-zinc-500">{role}</p>
+  <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{role}</p>
   <p class="mt-3 flex-1 text-sm leading-relaxed">{tagline}</p>
   <TechTags tech={tech} class="mt-4" />
 </article>
