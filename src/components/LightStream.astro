@@ -1,0 +1,251 @@
+---
+// Decorative home-page background, dark theme only: a bundle of glowing strands flowing down the page. The strands
+// squeeze together at each bend into a bright knot, light pulses run along them and sparks drift with them.
+// Drawn on a fixed canvas that follows the scroll position; see the script.
+---
+
+<canvas class="light-stream" aria-hidden="true"></canvas>
+
+<style>
+  .light-stream {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  :global(.dark) .light-stream { display: block; }
+
+  @media print {
+    :global(.dark) .light-stream { display: none; }
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.light-stream');
+  // Opaque: additive blending on a transparent canvas pushes colour past alpha, which shows as rectangular GPU tiles.
+  const ctx = canvas?.getContext('2d', { alpha: false });
+
+  if (canvas && ctx) {
+    const root = document.documentElement;
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    const GREEN = '74, 222, 128'; // --color-accent-soft
+    const BLUE = '56, 189, 248';
+    const STEP = 16; // px between points on a strand
+    const MAX_BOOST = 2.5; // a strand at the heart of a knot gets this much extra light
+
+    // o: place in the bundle; wander/f/p: how the strand drifts like a vein; loose: roots that stray from the bundle.
+    type Strand = {
+      o: number; wander: number; loose: number; f1: number; f2: number; p1: number; p2: number;
+      phase: number; speed: number; blue: boolean; alpha: number; dash: number;
+    };
+    type Spark = { strand: number; y: number; dust: boolean; jitter: number; size: number; speed: number; twinkle: number };
+    let w = 0, h = 0, page = 0, period = 0, maxSpread = 0;
+    let strands: Strand[] = [];
+    let sparks: Spark[] = [];
+    let raf = 0;
+    let background = '';
+
+    // Seeded so the bundle looks the same on every visit.
+    let seed = 7;
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+    function setup() {
+      const dpr = Math.min(devicePixelRatio, 1.5); // the glow hides the softness; the frame rate needs it
+      w = innerWidth;
+      h = innerHeight;
+      canvas!.width = w * dpr;
+      canvas!.height = h * dpr;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      page = root.scrollHeight;
+      period = Math.max(h * 1.6, 900);
+      const narrow = w < 640;
+      maxSpread = narrow ? 70 : 150;
+      seed = 7;
+      strands = Array.from({ length: narrow ? 32 : 56 }, () => {
+        const blue = rand() < 0.2; // blue reads darker than green, so it gets more light
+        const root = rand() < 0.15;
+        return {
+          o: rand() * 2 - 1,
+          wander: root ? 1.2 + rand() * 1.2 : 0.25 + rand() * 0.45,
+          loose: root ? 20 + rand() * 50 : 0,
+          f1: 0.0012 + rand() * 0.0025,
+          f2: 0.005 + rand() * 0.006,
+          p1: rand() * Math.PI * 2,
+          p2: rand() * Math.PI * 2,
+          phase: rand() * Math.PI * 2,
+          speed: 0.4 + rand() * 0.8,
+          blue,
+          alpha: (root ? 0.04 + rand() * 0.06 : 0.06 + rand() * 0.14) * (blue ? 1.8 : 1),
+          dash: 60 + rand() * 160,
+        };
+      });
+      sparks = Array.from({ length: Math.round(page / (narrow ? 10 : 6)) }, () => {
+        const dust = rand() < 0.2; // most sparks ride the strands; dust is scattered around the bundle
+        return {
+          strand: Math.floor(rand() * strands.length),
+          y: rand() * page,
+          dust,
+          jitter: dust ? (rand() - 0.5) * 3 : (rand() - 0.5) * 10, // dust: in spreads, sparks: in px
+          size: rand() < 0.92 ? 0.4 + rand() * 1.3 : 3 + rand() * 5,
+          speed: 10 + rand() * 30,
+          twinkle: rand() * Math.PI * 2,
+        };
+      });
+    }
+
+    // The bundle's centre swings across the page in uneven S-curves (layered waves, so no bend repeats exactly);
+    // its spread shrinks to a knot at each bend.
+    const angle = (y: number) => {
+      const u = (y / period) * Math.PI * 2;
+      return u + 0.6 + 0.45 * Math.sin(u * 0.62 + 1.3);
+    };
+    // Knots land in the side margins on desktop.
+    const centre = (y: number) => {
+      const a = angle(y);
+      return w * 0.5 + w * 0.4 * (0.8 * Math.sin(a) + 0.12 * Math.sin(a * 2.7 + 1) + 0.08 * Math.sin(y * 0.0041));
+    };
+    const spread = (y: number) =>
+      5 + maxSpread * Math.abs(Math.cos(angle(y))) ** 1.5 * (0.75 + 0.25 * Math.sin(y * 0.0023 + 2));
+    const strandX = (s: Strand, y: number, t: number) => {
+      const sp = spread(y) + s.loose * (0.4 + 0.6 * Math.abs(Math.sin(y * s.f1 + s.p2)));
+      // Each strand drifts on its own slow waves, so strands braid, cross and part like veins, and writhe over time.
+      const drift = 0.6 * Math.sin(y * s.f1 + s.p1 + t * 0.12 * s.speed) + 0.4 * Math.sin(y * s.f2 + s.p2 - t * 0.08);
+      return centre(y) + (s.o + drift * s.wander) * sp + 6 * Math.sin(y * 0.004 + t * s.speed + s.phase) * (sp / maxSpread);
+    };
+
+    // Gradients are filled as discs, not squares: with additive blending, a square's faded corners still round up
+    // to faint visible rectangles.
+    function glowDisc(x: number, y: number, r: number) {
+      ctx!.beginPath();
+      ctx!.arc(x, y, r, 0, Math.PI * 2);
+      ctx!.fill();
+    }
+
+    function draw(t: number) {
+      const c = ctx!;
+      const top = Math.floor((scrollY - 40) / STEP) * STEP;
+      const bottom = scrollY + h + 40;
+      c.globalCompositeOperation = 'source-over';
+      c.fillStyle = background;
+      c.fillRect(0, 0, w, h);
+      c.globalCompositeOperation = 'lighter'; // overlapping light adds up, so the knots glow
+
+      // Nebula haze around the bundle, alternating green and blue.
+      for (let y = Math.floor(top / 90) * 90; y <= bottom + 90; y += 90) {
+        const x = centre(y), sy = y - scrollY, r = spread(y) * 1.4 + 70;
+        const haze = c.createRadialGradient(x, sy, 0, x, sy, r);
+        haze.addColorStop(0, `rgba(${(y / 90) % 3 === 0 ? BLUE : GREEN}, 0.035)`);
+        haze.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        c.fillStyle = haze;
+        glowDisc(x, sy, r);
+      }
+
+      // Brighter where the bundle squeezes together, so each knot burns hot.
+      // Knot light as a vertical gradient that follows the squeeze, so it fades in and out with no visible edge.
+      const boosts: number[] = [];
+      for (let y = top; y <= bottom; y += STEP) boosts.push(Math.max(0, 1 - spread(y) / maxSpread) ** 4);
+      const knotLight = (rgb: string) => {
+        const g = c.createLinearGradient(0, top - scrollY, 0, top + (boosts.length - 1) * STEP - scrollY);
+        boosts.forEach((b, i) => g.addColorStop(i / (boosts.length - 1), `rgba(${rgb}, ${b})`));
+        return g;
+      };
+      const knotGreen = knotLight(GREEN), knotBlue = knotLight(BLUE);
+      // A point is drawn if it or a neighbour is lit, so each lit run fades out to zero at both ends.
+      const lits = boosts.map((b, i) => Math.max(b, boosts[i - 1] ?? 0, boosts[i + 1] ?? 0) >= 0.01);
+      c.lineWidth = 1;
+      for (const s of strands) {
+        const rgb = s.blue ? BLUE : GREEN;
+        const xs: number[] = [];
+        c.beginPath();
+        for (let y = top; y <= bottom; y += STEP) {
+          xs.push(strandX(s, y, t));
+          c.lineTo(xs[xs.length - 1], y - scrollY);
+        }
+        c.setLineDash([]);
+        c.strokeStyle = `rgba(${rgb}, ${s.alpha})`;
+        c.stroke();
+        // Extra light near a knot, drawn only where the gradient is lit.
+        if (!s.loose) {
+          c.beginPath();
+          let drawing = false;
+          for (let i = 0; i < xs.length; i++) {
+            const lit = lits[i];
+            if (lit && drawing) c.lineTo(xs[i], top + i * STEP - scrollY);
+            else if (lit) c.moveTo(xs[i], top + i * STEP - scrollY);
+            drawing = lit;
+          }
+          c.globalAlpha = Math.min(s.alpha * MAX_BOOST, 1);
+          c.strokeStyle = s.blue ? knotBlue : knotGreen;
+          c.stroke();
+          c.globalAlpha = 1;
+        }
+        // Soft pulses of light flowing down the strand, anchored to the page so scrolling doesn't move them.
+        if (s.loose) continue;
+        c.beginPath();
+        for (let i = 0; i < xs.length; i++) c.lineTo(xs[i], top + i * STEP - scrollY);
+        c.setLineDash([s.dash * 0.5, s.dash * 3]);
+        c.lineDashOffset = top - t * 60 * s.speed;
+        c.strokeStyle = `rgba(${rgb}, ${s.alpha * 0.9})`;
+        c.stroke();
+      }
+
+      // A soft glow on each knot (where the spread is at its narrowest), breathing slightly.
+      let prev = spread(top - 200), cur = spread(top - 200 + STEP);
+      for (let y = top - 200 + STEP; y <= bottom + 200; y += STEP) {
+        const next = spread(y + STEP);
+        if (cur < prev && cur <= next && cur < 30) {
+          const x = centre(y), sy = y - scrollY, r = 200;
+          const glow = c.createRadialGradient(x, sy, 0, x, sy, r);
+          const a = 0.55 + 0.1 * Math.sin(t * 1.5 + y);
+          glow.addColorStop(0, `rgba(235, 255, 225, ${a})`);
+          glow.addColorStop(0.08, `rgba(200, 255, 190, ${a * 0.6})`);
+          glow.addColorStop(0.35, `rgba(${GREEN}, ${a * 0.18})`);
+          glow.addColorStop(1, `rgba(${GREEN}, 0)`);
+          c.fillStyle = glow;
+          glowDisc(x, sy, r);
+        }
+        prev = cur;
+        cur = next;
+      }
+
+      // Sparks drifting down the strands; the large ones are faint, out-of-focus dots, the scattered ones dust.
+      for (const p of sparks) {
+        const y = (p.y + t * p.speed) % page;
+        if (y < top || y > bottom) continue;
+        const s = strands[p.strand];
+        const off = p.dust ? p.jitter * spread(y) : p.jitter;
+        const a = (0.35 + 0.3 * Math.sin(t * 2 + p.twinkle)) * (p.size > 2 ? 0.25 : 1);
+        c.fillStyle = `rgba(${s.blue ? BLUE : '210, 255, 200'}, ${a})`;
+        c.beginPath();
+        c.arc(strandX(s, y, t) + off, y - scrollY, p.size, 0, Math.PI * 2);
+        c.fill();
+      }
+    }
+
+    const dark = () => root.classList.contains('dark');
+    const frame = (ms: number) => {
+      draw(ms / 1000);
+      raf = requestAnimationFrame(frame);
+    };
+    // Animate only in the dark theme; with reduced motion, draw a still frame that follows the scroll.
+    function start() {
+      cancelAnimationFrame(raf);
+      if (!dark()) return;
+      background = getComputedStyle(document.body).backgroundColor;
+      if (still.matches) draw(0);
+      else raf = requestAnimationFrame(frame);
+    }
+
+    setup();
+    start();
+    addEventListener('scroll', () => still.matches && dark() && draw(0), { passive: true });
+    new ResizeObserver(() => { setup(); start(); }).observe(document.body);
+    addEventListener('resize', () => { setup(); start(); });
+    new MutationObserver(start).observe(root, { attributes: true, attributeFilter: ['class'] });
+    still.addEventListener('change', start);
+  }
+</script>
