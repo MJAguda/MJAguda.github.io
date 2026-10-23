@@ -2,8 +2,7 @@
 
 export const profile = {
   name: 'Mark Jayson Aguda',
-  role: 'Software Engineer',
-  focus: 'AI Integrations · Laravel, Vue & React',
+  role: 'AI-Augmented Software Engineer',
   pitch:
     'Software engineer with 4+ years building web, mobile and backend applications. I ship production APIs, admin tools and AI features like a conversational assistant on AWS Bedrock, from database design to the UI.',
   email: 'mark.jayson.aguda@gmail.com',
@@ -38,7 +37,7 @@ export const experience = [
   {
     company: 'Full Scale',
     url: 'https://fullscale.io',
-    title: 'Software Engineer',
+    title: 'Software Developer II',
     period: 'Oct 2023 – Present',
     tech: ['Laravel', 'PHP', 'Yii', 'Vue.js', 'React', 'MySQL', 'Typesense', 'AWS Bedrock', 'Docker'],
     summary:
