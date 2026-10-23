@@ -4,7 +4,7 @@ tagline: A beauty price comparison app, backed on Dragons' Den, that shows users
 role: Backend & full-stack development
 tech: [Laravel, MySQL, Typesense, Redis, AWS Bedrock, AWS S3, Elastic Beanstalk, Docker, Firebase, Klaviyo, PostHog, Pest, Sentry]
 order: 1
-status: live
+status: client-work
 links:
   - label: theskin.app
     href: https://theskin.app
@@ -25,6 +25,17 @@ I built the notification feature. When any tracked retailer lowers the price of 
 ## AI shopping assistant
 
 I led the **AI-powered in-app assistant** on **AWS Bedrock**. Users chat with it, and it recommends products through conversation. I owned it end to end, from the backend design to the mobile UI.
+
+## Spotlight: sponsored retailer placements
+
+I built the backend for **Spotlight**, which lets the business team run featured retailer placements on the app's Browse screen without an app release.
+
+- **Blocks and tiles:** the team creates named blocks such as "Current Offers", each holding tiles for retailers, with a banner, a destination and an optional **promo code** shown on the tile.
+- **Targeting and scheduling:** each block belongs to a **market** and can run on a **date window**, so a campaign starts and ends on its own.
+- **Ordering:** blocks and tiles are reordered by drag and drop in the admin panel, and the app shows them in that order.
+- **API:** the app asks for the user's market and gets back only the blocks that are live right now, with their tiles in order.
+
+![The Browse screen with a "Current Offers" Spotlight row of retailer tiles, one showing the FLASH25 promo code (test data)](../../assets/skin/spotlight-browse.png)
 
 ## Also built
 
