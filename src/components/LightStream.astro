@@ -54,12 +54,14 @@
     const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 
     function setup() {
-      const dpr = Math.min(devicePixelRatio, 1.5); // the glow hides the softness; the frame rate needs it
+      // Half resolution, scaled up by CSS: the canvas changes every frame, so the page is re-composited over it every
+      // frame, which costs per pixel and stuttered on integrated GPUs. The glow hides the softness.
+      const scale = 0.5;
       w = innerWidth;
       h = innerHeight;
-      canvas!.width = w * dpr;
-      canvas!.height = h * dpr;
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      canvas!.width = Math.round(w * scale);
+      canvas!.height = Math.round(h * scale);
+      ctx!.setTransform(scale, 0, 0, scale, 0, 0);
       page = root.scrollHeight;
       period = Math.max(h * 1.6, 900);
       const narrow = w < 640;
