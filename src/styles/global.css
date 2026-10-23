@@ -73,7 +73,7 @@
 @media screen and (prefers-reduced-motion: no-preference) {
   [data-reveal="wait"],
   [data-reveal="in"] {
-    animation: reveal-in 400ms ease-out var(--reveal-delay, 0ms) backwards;
+    animation: reveal-in 600ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) backwards;
   }
 
   [data-reveal="wait"] {
@@ -82,5 +82,5 @@
 }
 
 @keyframes reveal-in {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(12px); filter: blur(6px); }
 }
