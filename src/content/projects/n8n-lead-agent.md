@@ -10,6 +10,8 @@ links:
     href: https://github.com/MJAguda/n8n-lead-agent
 ---
 
+![The demo BrightSmile Dental website with the chat assistant, Bea, open in the corner](../../assets/n8n-lead-agent/clinic-site-chat-wide.png)
+
 Small businesses lose leads because website enquiries get answered hours later. This is the AI chat assistant I built in **n8n** to fix that, using a fictional dental clinic in Cebu as the client. It works as a 24/7 front desk: it answers questions, qualifies each visitor, books them into the real calendar, and hands the chat to a person when it should. I scoped it from recent Upwork job posts for n8n AI agents, so it covers what clients actually ask for: CRM and calendar tool calls, conversation memory, human handoff and follow-ups.
 
 ## What the assistant does
@@ -25,6 +27,13 @@ Small businesses lose leads because website enquiries get answered hours later. 
 ## How it's built
 
 - The **n8n AI Agent** (Groq, gpt-oss-120b) has Postgres chat memory and **four tools**. Each tool is its own sub-workflow, so the business rules live in JavaScript Code nodes and not in the prompt. The agent decides what to do, and the tools decide whether it's allowed.
+
+![n8n canvas: the chat trigger feeds an AI Agent connected to a Groq model, Postgres chat memory and four tools: save_lead, check_availability, book_appointment and handoff_to_human](../../assets/n8n-lead-agent/agent-canvas-wide.png)
+
+![The book_appointment tool workflow: load the lead, get free slots, verify the slot, save the appointment (an error branch handles a slot taken at the same moment), create the Google Calendar event, store its ID and email a confirmation](../../assets/n8n-lead-agent/book-appointment-canvas-wide.png)
+
+![A successful run of the save_lead tool in n8n: load the lead, normalise and score it, upsert it into Postgres, then skip the staff alert because the lead isn't hot](../../assets/n8n-lead-agent/save-lead-run-wide.png)
+
 - **PostgreSQL** is the CRM: leads, appointments, handoffs and follow-ups, plus SQL views for the funnel (booking rate, handoff rate). A Postgres **exclusion constraint** makes double booking impossible, even if two patients pick the same slot at once.
 - **41 unit tests** (`node:test`) run the Code-node JavaScript straight from the exported workflow JSON, so the workflows stay the single source of truth. A Node **eval script** runs scripted conversations against the live agent and checks the results in the database.
 - One `docker compose` stack (n8n, Postgres and the demo site) and a setup script that imports the credentials and workflows. It runs on any client server, and everything in it is free to use.

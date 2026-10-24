@@ -44,6 +44,8 @@
   /* Screenshots: a lone image is a featured shot; a paragraph of several becomes a gallery. */
   & img { @apply h-auto w-full max-w-xs rounded-xl border border-zinc-200 dark:border-zinc-800; }
   & p:has(> img + img) { @apply grid grid-cols-2 gap-3 sm:grid-cols-3; }
+  /* Desktop screenshots (file name ends in -wide) span the full text column. */
+  & img[src*="-wide."] { @apply max-w-full; }
 }
 
 /* Terminal cursor after the hero prompt. It blinks only when the visitor allows motion. */
