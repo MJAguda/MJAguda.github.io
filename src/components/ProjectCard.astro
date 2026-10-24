@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, tagline, role, tech, status } = project.data;
+const { title, subtitle, tagline, tech, status } = project.data;
 
 const badge = {
   live: null,
@@ -15,6 +15,7 @@ const badge = {
   'client-work': 'Client work',
   'personal-project': 'Personal project',
   'masters-thesis': "Master's thesis",
+  workshop: 'Workshop',
 }[status ?? 'live'];
 ---
 
@@ -27,7 +28,7 @@ const badge = {
       <span class="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 font-mono text-xs dark:bg-zinc-800">{badge}</span>
     )}
   </div>
-  <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{role}</p>
+  <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{subtitle}</p>
   <p class="mt-3 flex-1 text-sm leading-relaxed">{tagline}</p>
   <TechTags tech={tech} class="mt-4" />
 </article>

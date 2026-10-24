@@ -1,5 +1,6 @@
 ---
 title: AI Mock Interviewer
+subtitle: AI Job Interview Practice App
 tagline: An AI app for practicing job interviews.
 role: Personal project
 tech: [TypeScript, AI]

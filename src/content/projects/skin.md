@@ -1,5 +1,6 @@
 ---
 title: SKIN
+subtitle: Price Comparison App
 tagline: A beauty price comparison app, backed on Dragons' Den, that shows users the best prices for the products on their "virtual beauty shelf".
 role: Backend & full-stack development
 tech: [Laravel, MySQL, Typesense, Redis, AWS Bedrock, AWS S3, Elastic Beanstalk, Docker, Firebase, Klaviyo, PostHog, Pest, Sentry]
