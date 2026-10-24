@@ -1,6 +1,7 @@
 ---
 title: Northline Builders
 subtitle: AI Invoice Processor & AP Automation
+category: ai-automation
 tagline: An n8n accounts-payable pipeline for a construction firm. It reads digital and scanned supplier invoices with AI, catches maths errors, duplicates and bank-detail fraud, gets approval by email and posts draft bills to Xero.
 role: Personal project
 tech: [n8n, Node.js, Groq (gpt-oss-120b), Tesseract OCR, Xero API, Google Sheets API, Google Drive API, Gmail API, Docker Compose]

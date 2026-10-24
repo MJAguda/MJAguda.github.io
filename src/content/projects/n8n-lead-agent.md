@@ -1,6 +1,7 @@
 ---
 title: BrightSmile Dental
 subtitle: AI Lead Qualifier & Appointment Booker
+category: ai-automation
 tagline: An n8n website chat agent for a dental clinic. It answers questions, qualifies and scores leads, books real Google Calendar slots without double booking, and hands off to staff with the full transcript.
 role: Personal project
 tech: [n8n, Node.js, Groq (gpt-oss-120b), PostgreSQL, Google Calendar API, Gmail API, Docker Compose, Luxon]

@@ -8,6 +8,8 @@ const projects = defineCollection({
     title: z.string(),
     // One-line description shown under the title.
     subtitle: z.string(),
+    // Which group the project is listed under on the home page.
+    category: z.enum(['ai-automation', 'web-development', 'workshop']),
     tagline: z.string(),
     role: z.string(),
     tech: z.array(z.string()),

@@ -1,6 +1,7 @@
 ---
 title: PGIAuto
 subtitle: Dealer Inventory & Car Ads Platform
+category: web-development
 tagline: Three automotive and business management apps for one client, covering dealer management, internal operations and automotive classifieds.
 role: Full-stack development
 tech: [PHP, Yii, Vue.js, React, jQuery, MySQL, Highcharts, Docker, CircleCI, Google Cloud Storage, AWS Elastic Beanstalk]
