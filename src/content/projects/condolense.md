@@ -1,6 +1,7 @@
 ---
 title: CondoLense
 subtitle: AI Lead Finder for Condo Agents
+category: web-development
 tagline: An AI-powered lead finder for condo agents in Metro Manila and Cebu. It pulls buyer posts from Reddit, Telegram and Facebook, scores them with AI and drafts the first message.
 role: Full-stack development
 tech: [Laravel, Livewire, Alpine.js, Tailwind CSS, MySQL, Groq (LLaMA 3.3 70B), Facebook Graph API, Reddit API, Telegram, AWS EC2, GitHub Actions, PHPUnit]

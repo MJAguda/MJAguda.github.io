@@ -1,6 +1,7 @@
 ---
 title: Campus Connect
 subtitle: An Android App for Attendance Monitoring with QR Code, Biometric, and Facial Recognition Technologies with GPS Tracking for the Employees
+category: web-development
 tagline: An Android attendance app using QR codes, biometrics and GPS. It was my master's thesis, recognized as Outstanding Thesis and published in a research journal.
 role: Android development
 tech: [Android, Java, Firebase Realtime Database, "Google Play Services (Location, Maps)", ZXing, AndroidX Biometric, Volley, JUnit, Mockito, Espresso]

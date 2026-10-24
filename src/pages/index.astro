@@ -11,6 +11,11 @@ import photo from '../assets/mark-jayson-aguda.jpg';
 import { profile, about, skills, experience, education, teaching } from '../data/profile';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projectGroups = [
+  { category: 'ai-automation', title: 'AI Automation' },
+  { category: 'web-development', title: 'Web & App Development' },
+  { category: 'workshop', title: 'Workshops' },
+].map((group) => ({ ...group, projects: projects.filter((p) => p.data.category === group.category) }));
 // Simple Icons has no LinkedIn logo, so LinkedIn shows its `mark` text instead.
 const socialIcons: Record<string, SimpleIcon> = { GitHub: siGithub, YouTube: siYoutube };
 
@@ -60,9 +65,14 @@ const sectionTitle = 'font-mono text-2xl font-bold tracking-tight';
 
   <section id="projects" class="scroll-mt-20 py-12">
     <h2 class={sectionTitle} data-reveal><span aria-hidden="true" class="text-accent dark:text-accent-soft">{'// '}</span><span class="lowercase">Projects</span></h2>
-    <div class="mt-6 grid gap-4 sm:grid-cols-2">
-      {projects.map((project) => <ProjectCard project={project} />)}
-    </div>
+    {projectGroups.map((group) => (
+      <div class="mt-8">
+        <h3 class="font-mono text-sm font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400" data-reveal>{group.title}</h3>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          {group.projects.map((project) => <ProjectCard project={project} />)}
+        </div>
+      </div>
+    ))}
   </section>
 
   <section id="skills" class="scroll-mt-20 py-12">

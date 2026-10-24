@@ -1,6 +1,7 @@
 ---
 title: GitHub Copilot Workshop
 subtitle: AI-Assisted Development Video Series
+category: workshop
 tagline: A 14-part video series I created and taught on AI-assisted development.
 role: Creator & instructor
 tech: [GitHub Copilot, AI-assisted development]

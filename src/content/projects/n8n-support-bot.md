@@ -1,6 +1,7 @@
 ---
 title: Tide & Trail Outfitters
 subtitle: AI Customer Support Bot (RAG)
+category: ai-automation
 tagline: An n8n support chat for an online store. It answers only from the store's own help documents with sources, looks up orders only when the order number and email match, and opens a ticket instead of guessing.
 role: Personal project
 tech: [n8n, Node.js, Groq (gpt-oss-120b), Qdrant, Ollama (nomic-embed-text), RAG, Docker Compose]
