@@ -49,6 +49,9 @@
     let sparks: Spark[] = [];
     let raf = 0;
     let background = '';
+    let scrim: CanvasGradient | null = null;
+    let scrimFor = '', scrimRgb = [0, 0, 0];
+    const SCRIM = 0.6; // how much of the stream the text column hides
 
     // Seeded so the bundle looks the same on every visit.
     let seed = 7;
@@ -227,6 +230,35 @@
         c.arc(strandX(s, y, t) + off, y - scrollY, p.size, 0, Math.PI * 2);
         c.fill();
       }
+
+      // Dim the stream behind the text column so a knot never washes out the copy; the margins keep full light.
+      c.globalCompositeOperation = 'source-over';
+      c.fillStyle = scrim!;
+      c.fillRect(0, 0, w, h);
+    }
+
+    // A band of page background over the text column (<main>'s content box), fading out past its edges.
+    function makeScrim() {
+      const main = document.querySelector('main')!;
+      const box = main.getBoundingClientRect();
+      const pad = getComputedStyle(main);
+      const left = box.left + parseFloat(pad.paddingLeft) - 80;
+      const right = box.right - parseFloat(pad.paddingRight) + 80;
+      // The background may be any CSS colour (oklch), so read it back as RGB to give it an alpha; once per colour.
+      if (scrimFor !== background) {
+        ctx!.fillStyle = background;
+        ctx!.fillRect(0, 0, 4, 4); // the canvas is half resolution, so cover a whole pixel
+        scrimRgb = [...ctx!.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+        scrimFor = background;
+      }
+      const [r, g, b] = scrimRgb;
+      const fade = Math.min(0.45, 140 / (right - left));
+      const band = ctx!.createLinearGradient(left, 0, right, 0);
+      band.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
+      band.addColorStop(fade, `rgba(${r}, ${g}, ${b}, ${SCRIM})`);
+      band.addColorStop(1 - fade, `rgba(${r}, ${g}, ${b}, ${SCRIM})`);
+      band.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+      return band;
     }
 
     const dark = () => root.classList.contains('dark');
@@ -239,6 +271,7 @@
       cancelAnimationFrame(raf);
       if (!dark()) return;
       background = getComputedStyle(document.body).backgroundColor;
+      scrim = makeScrim();
       if (still.matches) draw(0);
       else raf = requestAnimationFrame(frame);
     }
