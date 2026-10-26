@@ -95,3 +95,26 @@ export const education = [
     period: '2015 – 2020',
   },
 ];
+
+// Government and board credentials. No links: the CpE board page is down, and the civil service results are only
+// posted on news sites.
+export const licenses = [
+  { name: 'Certified Computer Engineer', issuer: 'Computer Engineering Certification Board, Inc.', date: 'Dec 2024' },
+  { name: 'Civil Service Professional Eligibility', issuer: 'Civil Service Commission', date: 'Jun 2023' },
+  { name: 'Civil Service Eligibility for EDP Specialist (Computer Programmer)', issuer: 'Civil Service Commission', date: 'Jan 2020' },
+  { name: 'Certificate of Proficiency in Computer Programming', issuer: 'DICT Philippines', date: 'Oct 2019' },
+];
+
+export const hackerrank = {
+  date: 'Jun – Jul 2023',
+  certificates: [
+    { name: 'JavaScript (Intermediate)', id: 'c8ef3daf3ccc' },
+    { name: 'JavaScript (Basic)', id: 'bd057853f61c' },
+    { name: 'SQL (Advanced)', id: 'a491b57c3548' },
+    { name: 'SQL (Intermediate)', id: 'caa0b6051ce3' },
+    { name: 'SQL (Basic)', id: 'aa82049084f6' },
+    { name: 'Python (Basic)', id: '8af39605aaea' },
+    { name: 'Problem Solving (Basic)', id: 'f7dace461169' },
+    { name: 'Java (Basic)', id: 'f4015ea07ce0' },
+  ],
+};

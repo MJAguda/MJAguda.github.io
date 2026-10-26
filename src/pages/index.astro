@@ -8,7 +8,7 @@ import LightStream from '../components/LightStream.astro';
 import { siGithub, siYoutube, type SimpleIcon } from 'simple-icons';
 import { Image } from 'astro:assets';
 import photo from '../assets/mark-jayson-aguda.jpg';
-import { profile, about, skills, experience, education, teaching } from '../data/profile';
+import { profile, about, skills, experience, education, licenses, hackerrank, teaching } from '../data/profile';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const projectGroups = [
@@ -121,6 +121,34 @@ const sectionTitle = 'font-mono text-2xl font-bold tracking-tight';
           <span class="font-mono text-sm text-zinc-600 dark:text-zinc-400">{e.period}</span>
         </li>
       ))}
+    </ul>
+  </section>
+
+  <section id="certifications" class="scroll-mt-20 py-12">
+    <h2 class={sectionTitle} data-reveal><span aria-hidden="true" class="text-accent dark:text-accent-soft">{'// '}</span><span class="lowercase">Licenses & certifications</span></h2>
+    <ul class="mt-6 space-y-3">
+      {licenses.map((l) => (
+        <li class="flex flex-wrap items-baseline justify-between gap-x-4" data-reveal>
+          <span>
+            <span class="font-medium text-zinc-900 dark:text-zinc-100">{l.name}</span>
+            <span class="block text-sm text-zinc-600 dark:text-zinc-400">{l.issuer}</span>
+          </span>
+          <span class="font-mono text-sm text-zinc-600 dark:text-zinc-400">{l.date}</span>
+        </li>
+      ))}
+      <li data-reveal>
+        <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+          <span class="font-medium text-zinc-900 dark:text-zinc-100">HackerRank skill certificates</span>
+          <span class="font-mono text-sm text-zinc-600 dark:text-zinc-400">{hackerrank.date}</span>
+        </div>
+        <ul class="mt-2 flex flex-wrap gap-2">
+          {hackerrank.certificates.map((c) => (
+            <li>
+              <a href={`https://www.hackerrank.com/certificates/${c.id}`} class="inline-flex rounded-md border border-zinc-200 px-2 py-1 text-sm transition hover:border-accent hover:text-accent dark:border-zinc-800 dark:hover:border-accent-soft dark:hover:text-accent-soft">{c.name} ↗</a>
+            </li>
+          ))}
+        </ul>
+      </li>
     </ul>
   </section>
 
