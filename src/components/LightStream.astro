@@ -1,7 +1,7 @@
 ---
-// Decorative background for the home and project pages, dark theme only: a bundle of glowing strands flowing down the
-// page. The strands squeeze together at each bend into a bright knot, light pulses run along them and sparks drift with
-// them.
+// Decorative background for the home and project pages: a bundle of glowing strands flowing down the page. The strands
+// squeeze together at each bend into a bright knot, light pulses run along them and sparks drift with them. The light
+// theme draws the same bundle as ink: deeper colours that darken where they overlap, with a soft tint on each knot.
 // Drawn on a fixed canvas that follows the scroll position; see the script.
 ---
 
@@ -9,7 +9,6 @@
 
 <style>
   .light-stream {
-    display: none;
     position: fixed;
     inset: 0;
     z-index: -1;
@@ -18,10 +17,8 @@
     pointer-events: none;
   }
 
-  :global(.dark) .light-stream { display: block; }
-
   @media print {
-    :global(.dark) .light-stream { display: none; }
+    .light-stream { display: none; }
   }
 </style>
 
@@ -33,8 +30,27 @@
   if (canvas && ctx) {
     const root = document.documentElement;
     const still = matchMedia('(prefers-reduced-motion: reduce)');
-    const GREEN = '74, 222, 128'; // --color-accent-soft
-    const BLUE = '56, 189, 248';
+    // Dark: light on black, added up so knots glow. Light: ink on white, multiplied so knots get denser instead.
+    const THEMES = {
+      dark: {
+        blend: 'lighter' as GlobalCompositeOperation,
+        green: '74, 222, 128', // --color-accent-soft
+        blue: '56, 189, 248',
+        core: ['235, 255, 225', '200, 255, 190'], // white-hot centre of a knot
+        spark: '210, 255, 200',
+        ink: 1,
+      },
+      light: {
+        blend: 'multiply' as GlobalCompositeOperation,
+        green: '22, 163, 74',
+        blue: '2, 132, 199',
+        core: ['187, 247, 208', '134, 239, 172'], // a mint wash: white would vanish when multiplied
+        spark: '21, 128, 61',
+        ink: 1.4, // thin ink lines read lighter on white than glowing lines on black
+      },
+    };
+    let theme = THEMES.dark;
+    let GREEN = theme.green, BLUE = theme.blue;
     const STEP = 16; // px between points on a strand
     const MAX_BOOST = 2.5; // a strand at the heart of a knot gets this much extra light
 
@@ -138,7 +154,7 @@
       c.globalCompositeOperation = 'source-over';
       c.fillStyle = background;
       c.fillRect(0, 0, w, h);
-      c.globalCompositeOperation = 'lighter'; // overlapping light adds up, so the knots glow
+      c.globalCompositeOperation = theme.blend; // overlapping strands add up, so the knots stand out
 
       // Nebula haze around the bundle, alternating green and blue.
       for (let y = Math.floor(top / 90) * 90; y <= bottom + 90; y += 90) {
@@ -172,7 +188,7 @@
           c.lineTo(xs[xs.length - 1], y - scrollY);
         }
         c.setLineDash([]);
-        c.strokeStyle = `rgba(${rgb}, ${s.alpha})`;
+        c.strokeStyle = `rgba(${rgb}, ${s.alpha * theme.ink})`;
         c.stroke();
         // Extra light near a knot, drawn only where the gradient is lit.
         if (!s.loose) {
@@ -184,7 +200,7 @@
             else if (lit) c.moveTo(xs[i], top + i * STEP - scrollY);
             drawing = lit;
           }
-          c.globalAlpha = Math.min(s.alpha * MAX_BOOST, 1);
+          c.globalAlpha = Math.min(s.alpha * theme.ink * MAX_BOOST, 1);
           c.strokeStyle = s.blue ? knotBlue : knotGreen;
           c.stroke();
           c.globalAlpha = 1;
@@ -195,7 +211,7 @@
         for (let i = 0; i < xs.length; i++) c.lineTo(xs[i], top + i * STEP - scrollY);
         c.setLineDash([s.dash * 0.5, s.dash * 3]);
         c.lineDashOffset = top - t * 60 * s.speed;
-        c.strokeStyle = `rgba(${rgb}, ${s.alpha * 0.9})`;
+        c.strokeStyle = `rgba(${rgb}, ${s.alpha * theme.ink * 0.9})`;
         c.stroke();
       }
 
@@ -207,8 +223,8 @@
           const x = centre(y), sy = y - scrollY, r = 200;
           const glow = c.createRadialGradient(x, sy, 0, x, sy, r);
           const a = 0.55 + 0.1 * Math.sin(t * 1.5 + y);
-          glow.addColorStop(0, `rgba(235, 255, 225, ${a})`);
-          glow.addColorStop(0.08, `rgba(200, 255, 190, ${a * 0.6})`);
+          glow.addColorStop(0, `rgba(${theme.core[0]}, ${a})`);
+          glow.addColorStop(0.08, `rgba(${theme.core[1]}, ${a * 0.6})`);
           glow.addColorStop(0.35, `rgba(${GREEN}, ${a * 0.18})`);
           glow.addColorStop(1, `rgba(${GREEN}, 0)`);
           c.fillStyle = glow;
@@ -225,7 +241,7 @@
         const s = strands[p.strand];
         const off = p.dust ? p.jitter * spread(y) : p.jitter;
         const a = (0.35 + 0.3 * Math.sin(t * 2 + p.twinkle)) * (p.size > 2 ? 0.25 : 1);
-        c.fillStyle = `rgba(${s.blue ? BLUE : '210, 255, 200'}, ${a})`;
+        c.fillStyle = `rgba(${s.blue ? BLUE : theme.spark}, ${a})`;
         c.beginPath();
         c.arc(strandX(s, y, t) + off, y - scrollY, p.size, 0, Math.PI * 2);
         c.fill();
@@ -266,10 +282,12 @@
       draw(ms / 1000);
       raf = requestAnimationFrame(frame);
     };
-    // Animate only in the dark theme; with reduced motion, draw a still frame that follows the scroll.
+    // With reduced motion, draw a still frame that follows the scroll.
     function start() {
       cancelAnimationFrame(raf);
-      if (!dark()) return;
+      theme = dark() ? THEMES.dark : THEMES.light;
+      GREEN = theme.green;
+      BLUE = theme.blue;
       background = getComputedStyle(document.body).backgroundColor;
       scrim = makeScrim();
       if (still.matches) draw(0);
@@ -278,7 +296,7 @@
 
     setup();
     start();
-    addEventListener('scroll', () => still.matches && dark() && draw(0), { passive: true });
+    addEventListener('scroll', () => still.matches && draw(0), { passive: true });
     new ResizeObserver(() => { setup(); start(); }).observe(document.body);
     addEventListener('resize', () => { setup(); start(); });
     new MutationObserver(start).observe(root, { attributes: true, attributeFilter: ['class'] });
