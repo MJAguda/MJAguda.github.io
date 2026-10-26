@@ -14,6 +14,9 @@ links:
     href: https://apps.apple.com/gb/app/skin/id1522723156
   - label: Google Play
     href: https://play.google.com/store/apps/details?id=app.theskin
+cover:
+  src: ../../assets/skin/compare-prices.png
+  alt: "SKIN product page comparing prices across retailers"
 ---
 
 SKIN is a UK app that helps people find the best prices for the beauty products they already use. I built and maintained the **Laravel API** behind its Flutter mobile app.

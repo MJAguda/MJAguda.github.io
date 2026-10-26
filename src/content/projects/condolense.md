@@ -10,6 +10,9 @@ status: personal-project
 links:
   - label: Source on GitHub
     href: https://github.com/MJAguda/condolense
+cover:
+  src: ../../assets/condolense/lead-inbox-wide.png
+  alt: "CondoLense lead inbox with AI intent scores and drafted replies (demo data)"
 ---
 
 Condo buyers in the Philippines post what they want in the open every day, often in Taglish: *"May budget ako ng 4.5M, looking for 1BR sa BGC or Makati."* Agents miss most of these posts because they're buried in hours of scrolling and noise, and a slow reply loses the sale. CondoLense finds those buyers, ranks them and helps the agent reach out first. I designed and built it end to end.

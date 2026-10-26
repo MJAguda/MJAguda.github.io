@@ -2,19 +2,22 @@
 title: Tide & Trail Outfitters
 subtitle: AI Customer Support Bot (RAG)
 category: ai-automation
-tagline: An n8n support chat for an online store. It answers only from the store's own help documents with sources, looks up orders only when the order number and email match, and opens a ticket instead of guessing.
+tagline: An n8n support chat, built as a demo for an online store. It answers only from the store's own help documents with sources, looks up orders only when the order number and email match, and opens a ticket instead of guessing.
 role: Personal project
 tech: [n8n, Node.js, Groq (gpt-oss-120b), Qdrant, Ollama (nomic-embed-text), RAG, Docker Compose]
 order: 3.7
-status: personal-project
+status: demo
 links:
   - label: Source on GitHub
     href: https://github.com/MJAguda/n8n-support-bot
+cover:
+  src: ../../assets/n8n-support-bot/store-chat-wide.png
+  alt: "The demo outdoor-gear store with the support chat open"
 ---
 
 ![The demo outdoor-gear store with the support chat open](../../assets/n8n-support-bot/store-chat-wide.png)
 
-Most store support questions are the same twenty: shipping times, return windows, sizing, "where is my order". Generic chatbots either can't answer them or make answers up, and a customer told the wrong return policy becomes a complaint. I built this **retrieval-augmented (RAG)** support bot in **n8n** for a fictional outdoor-gear store. I scoped it from recent Upwork job posts for n8n agents with a vector-store knowledge base and human handoff.
+Most store support questions are the same twenty: shipping times, return windows, sizing, "where is my order". Generic chatbots either can't answer them or make answers up, and a customer told the wrong return policy becomes a complaint. I built this **retrieval-augmented (RAG)** support bot in **n8n** as a demo for an outdoor-gear store. I scoped it from recent Upwork job posts for n8n agents with a vector-store knowledge base and human handoff.
 
 ## What it does
 

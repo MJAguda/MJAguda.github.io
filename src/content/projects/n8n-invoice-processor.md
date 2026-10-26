@@ -2,19 +2,22 @@
 title: Northline Builders
 subtitle: AI Invoice Processor & AP Automation
 category: ai-automation
-tagline: An n8n accounts-payable pipeline for a construction firm. It reads digital and scanned supplier invoices with AI, catches maths errors, duplicates and bank-detail fraud, gets approval by email and posts draft bills to Xero.
+tagline: An n8n accounts-payable pipeline, built as a demo for a construction firm. It reads digital and scanned supplier invoices with AI, catches maths errors, duplicates and bank-detail fraud, gets approval by email and posts draft bills to Xero.
 role: Personal project
 tech: [n8n, Node.js, Groq (gpt-oss-120b), Tesseract OCR, Xero API, Google Sheets API, Google Drive API, Gmail API, Docker Compose]
 order: 3.6
-status: personal-project
+status: demo
 links:
   - label: Source on GitHub
     href: https://github.com/MJAguda/n8n-invoice-processor
+cover:
+  src: ../../assets/n8n-invoice-processor/sample-invoice-bank-change-wide.png
+  alt: "A demo subcontractor invoice asking for payment to new bank details, one the pipeline flags"
 ---
 
-![A fictional subcontractor invoice that asks for payment to new bank details, one of the eight demo invoices the pipeline catches](../../assets/n8n-invoice-processor/sample-invoice-bank-change-wide.png)
+![A sample subcontractor invoice that asks for payment to new bank details, one of the eight demo invoices the pipeline catches](../../assets/n8n-invoice-processor/sample-invoice-bank-change-wide.png)
 
-Small businesses still type supplier invoices in by hand. It's slow, typing errors creep in, the same invoice gets paid twice, and "please note our new bank details" emails get paid to fraudsters. I built this **n8n** pipeline for a fictional general contractor to do accounts payable end to end. I scoped it from a recent Upwork job post: watch an inbox, read scanned PDFs, write the fields to a sheet, hold invoices in an approval queue, and check for duplicates and failures.
+Small businesses still type supplier invoices in by hand. It's slow, typing errors creep in, the same invoice gets paid twice, and "please note our new bank details" emails get paid to fraudsters. I built this **n8n** pipeline as a demo for a general contractor to do accounts payable end to end. I scoped it from a recent Upwork job post: watch an inbox, read scanned PDFs, write the fields to a sheet, hold invoices in an approval queue, and check for duplicates and failures.
 
 ## What it does
 

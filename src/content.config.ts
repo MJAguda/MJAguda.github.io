@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     // One-line description shown under the title.
     subtitle: z.string(),
@@ -15,10 +15,12 @@ const projects = defineCollection({
     tech: z.array(z.string()),
     // Lower numbers show first on the home page.
     order: z.number(),
-    status: z.enum(['live', 'in-progress', 'client-work', 'personal-project', 'masters-thesis', 'workshop']).optional(),
+    status: z.enum(['live', 'in-progress', 'client-work', 'personal-project', 'masters-thesis', 'workshop', 'demo']).optional(),
     links: z.array(z.object({ label: z.string(), href: z.url() })).default([]),
     // Shown when there is no public link, e.g. "Demo available on request".
     note: z.string().optional(),
+    // Screenshot shown at the top of the home page card.
+    cover: z.object({ src: image(), alt: z.string() }).optional(),
   }),
 });
 

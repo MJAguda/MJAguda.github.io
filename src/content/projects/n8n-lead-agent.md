@@ -2,19 +2,22 @@
 title: BrightSmile Dental
 subtitle: AI Lead Qualifier & Appointment Booker
 category: ai-automation
-tagline: An n8n website chat agent for a dental clinic. It answers questions, qualifies and scores leads, books real Google Calendar slots without double booking, and hands off to staff with the full transcript.
+tagline: An n8n website chat agent, built as a demo for a dental clinic. It answers questions, qualifies and scores leads, books real Google Calendar slots without double booking, and hands off to staff with the full transcript.
 role: Personal project
 tech: [n8n, Node.js, Groq (gpt-oss-120b), PostgreSQL, Google Calendar API, Gmail API, Docker Compose, Luxon]
 order: 3.5
-status: personal-project
+status: demo
 links:
   - label: Source on GitHub
     href: https://github.com/MJAguda/n8n-lead-agent
+cover:
+  src: ../../assets/n8n-lead-agent/clinic-site-chat-wide.png
+  alt: "The demo BrightSmile Dental website with the chat assistant open"
 ---
 
 ![The demo BrightSmile Dental website with the chat assistant, Bea, open in the corner](../../assets/n8n-lead-agent/clinic-site-chat-wide.png)
 
-Small businesses lose leads because website enquiries get answered hours later. This is the AI chat assistant I built in **n8n** to fix that, using a fictional dental clinic in Cebu as the client. It works as a 24/7 front desk: it answers questions, qualifies each visitor, books them into the real calendar, and hands the chat to a person when it should. I scoped it from recent Upwork job posts for n8n AI agents, so it covers what clients actually ask for: CRM and calendar tool calls, conversation memory, human handoff and follow-ups.
+Small businesses lose leads because website enquiries get answered hours later. This is the AI chat assistant I built in **n8n** to fix that, as a demo for a dental clinic in Cebu. It works as a 24/7 front desk: it answers questions, qualifies each visitor, books them into the real calendar, and hands the chat to a person when it should. I scoped it from recent Upwork job posts for n8n AI agents, so it covers what clients actually ask for: CRM and calendar tool calls, conversation memory, human handoff and follow-ups.
 
 ## What the assistant does
 
