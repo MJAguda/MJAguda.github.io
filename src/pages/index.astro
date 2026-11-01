@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import ProjectBook from '../components/ProjectBook.astro';
 import SkillChips from '../components/SkillChips.astro';
 import TechTags from '../components/TechTags.astro';
 import LightStream from '../components/LightStream.astro';
@@ -68,7 +69,11 @@ const sectionTitle = 'font-mono text-2xl font-bold tracking-tight';
     {projectGroups.map((group) => (
       <div class="mt-8">
         <h3 class="font-mono text-sm font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400" data-reveal>{group.title}</h3>
-        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        {/* Wide screens get a flip book. Phones and print keep the cards, which are too small for two-page spreads. */}
+        <div class="mt-4 hidden md:block print:hidden">
+          <ProjectBook projects={group.projects} title={group.title} />
+        </div>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 md:hidden print:grid">
           {group.projects.map((project) => <ProjectCard project={project} media={group.projects.some((p) => p.data.cover)} />)}
         </div>
       </div>
