@@ -1,0 +1,314 @@
+---
+// A flip book of projects. One project per spread: its screenshot on the left page, its details on the right.
+// The page-turn technique is adapted from Roko C. Buljan's CSS flip book (https://codepen.io/rokobuljan/pen/jORNEyz):
+// each leaf reads its index (--i) and the book's current leaf (--c) and CSS does the rest.
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import TechTags from './TechTags.astro';
+import { statusBadge } from '../data/status';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  title: string;
+}
+
+const { projects, title } = Astro.props;
+
+// A leaf has two faces. Leaf 0 is the cover, then project n's details face the screenshot of project n + 1,
+// so every opened spread shows one project.
+const leaves = Array.from({ length: projects.length + 1 }, (_, i) => ({
+  front: projects[i - 1],
+  back: projects[i],
+}));
+---
+
+<div class="flipbook" data-flipbook>
+  <div class="stage">
+    <div class="book" style={`--n: ${leaves.length}`}>
+      {leaves.map(({ front, back }, i) => (
+        <div class="leaf" style={`--i: ${i}`}>
+          <div class:list={['face front', { cover: i === 0 }]}>
+            {front ? (
+              <>
+                <div>
+                  <p class="flex items-center justify-between gap-2 font-mono text-xs text-zinc-600 dark:text-zinc-400">
+                    <span>{front.data.role}</span>
+                    {statusBadge[front.data.status ?? 'live'] && (
+                      <span class="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 dark:bg-zinc-800">{statusBadge[front.data.status ?? 'live']}</span>
+                    )}
+                  </p>
+                  <h4 class="mt-3 text-xl font-semibold text-zinc-900 dark:text-zinc-50">{front.data.title}</h4>
+                  <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{front.data.subtitle}</p>
+                  <p class="mt-4 text-sm leading-relaxed">{front.data.tagline}</p>
+                </div>
+                <div>
+                  <TechTags tech={front.data.tech} />
+                  <a href={`/projects/${front.id}/`} class="mt-4 inline-block text-sm font-medium text-accent underline underline-offset-4 dark:text-accent-soft">Read the case study →</a>
+                </div>
+              </>
+            ) : (
+              <>
+                <p class="font-mono text-sm opacity-80" aria-hidden="true">{'// '}projects</p>
+                <div>
+                  <h3 class="text-3xl font-bold tracking-tight !text-inherit">{title}</h3>
+                  <p class="mt-2 font-mono text-sm opacity-80">{projects.length} project{projects.length === 1 ? '' : 's'}</p>
+                </div>
+                <p class="font-mono text-xs opacity-70" aria-hidden="true">click the page to open →</p>
+              </>
+            )}
+          </div>
+
+          <div class:list={['face back', { cover: !back }]}>
+            {back ? (
+              <>
+                <div class="shot">
+                  {back.data.cover
+                    ? <Image src={back.data.cover.src} alt={back.data.cover.alt} widths={[400, 800]} sizes="(min-width: 768px) 400px, 100vw" class="size-full object-cover object-top" />
+                    : <div class="flex size-full items-center justify-center font-mono text-sm text-zinc-500" aria-hidden="true">{'// '}{back.id}</div>}
+                </div>
+                <div class="px-5 pb-12 pt-4">
+                  {back.data.links.length > 0 && (
+                    <ul class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                      {back.data.links.map((l) => (
+                        <li><a href={l.href} class="font-medium text-accent underline underline-offset-4 dark:text-accent-soft">{l.label} ↗</a></li>
+                      ))}
+                    </ul>
+                  )}
+                  {back.data.note && <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{back.data.note}</p>}
+                </div>
+              </>
+            ) : (
+              <p class="m-auto font-mono text-sm opacity-80">// end of {title}</p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="mt-4 flex items-center justify-center gap-4">
+    <button type="button" data-prev aria-label="Previous page" class="nav-btn">←</button>
+    <p class="min-w-20 text-center font-mono text-sm" aria-live="polite" data-status>Cover</p>
+    <button type="button" data-next aria-label="Next page" class="nav-btn">→</button>
+  </div>
+</div>
+
+<style>
+  /* Book geometry. --c is the leaf being read (0 = closed), --i is each leaf's index, --n the leaf count. */
+  .flipbook {
+    container-type: inline-size;
+  }
+
+  .stage {
+    padding-block: 2.5rem 1rem;
+    perspective: 1400px;
+  }
+
+  .book {
+    --c: 0;
+    --w: min(48cqw, 26rem);
+    position: relative;
+    display: flex;
+    width: var(--w);
+    margin-inline: auto;
+    /* Let clicks fall through to the leaves, and nothing else. */
+    pointer-events: none;
+    transform-style: preserve-3d;
+    transition: translate 1s;
+    /* Closed it sits centred; open, the spine is centred; at the end the back cover is centred. */
+    translate: calc((min(var(--c), 1) + clamp(0, var(--c) - var(--n) + 1, 1)) * 50%) 0;
+    rotate: 1 0 0 18deg;
+  }
+
+  .leaf {
+    flex: none;
+    display: flex;
+    width: 100%;
+    min-height: calc(var(--w) * 1.3);
+    pointer-events: all;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    /* Stagger the turn when several leaves flip at once. */
+    transition:
+      transform 1s,
+      rotate 1s ease-in calc((min(var(--i), var(--c)) - max(var(--i), var(--c))) * 50ms);
+    translate: calc(var(--i) * -100%) 0 0;
+    /* Keeps the two visible pages level and the rest of the stack below them. */
+    transform: translateZ(calc((var(--c) - var(--i) - 0.5) * 2px));
+    rotate: 0 1 0 calc(clamp(0, var(--c) - var(--i), 1) * -180deg);
+    box-shadow: 0 0.5em 1em -0.2em #00000020;
+  }
+
+  .face {
+    position: relative;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;
+    backface-visibility: hidden;
+    /* Firefox needs this for backface-visibility to hold. */
+    translate: 0;
+    padding: 1.25rem;
+    border: 1px solid #0002;
+    background: linear-gradient(to left, #fff 80%, #f1f1f2);
+    border-radius: 0.1em 0.5em 0.5em 0.1em;
+  }
+
+  .back {
+    translate: -100% 0;
+    rotate: 0 1 0 180deg;
+    padding: 0;
+    justify-content: flex-start;
+    background: linear-gradient(to right, #fff 80%, #f1f1f2);
+    border-radius: 0.5em 0.1em 0.1em 0.5em;
+  }
+
+  .shot {
+    aspect-ratio: 4 / 3;
+    flex: none;
+    background: #f4f4f5;
+    border-bottom: 1px solid #0002;
+  }
+
+  .cover {
+    color: #ecfdf5;
+    background:
+      radial-gradient(circle farthest-corner at 80% 20%, #4ade8040 0%, #16653400 70%),
+      #14532d;
+  }
+
+  .back.cover {
+    padding: 1.25rem;
+  }
+
+  /* Page numbers count the faces after the cover. */
+  .book {
+    counter-reset: page;
+  }
+
+  .face:not(.cover)::after {
+    position: absolute;
+    bottom: 0.9rem;
+    counter-increment: page;
+    content: counter(page) ".";
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  .front::after {
+    right: 1rem;
+  }
+
+  .back::after {
+    left: 1rem;
+  }
+
+  .nav-btn {
+    display: inline-flex;
+    height: 2.5rem;
+    width: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-zinc-300);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  :global(.dark) .face {
+    color: var(--color-zinc-300);
+    border-color: #ffffff1f;
+    background: linear-gradient(to left, #18181b 80%, #0f0f12);
+  }
+
+  :global(.dark) .back {
+    background: linear-gradient(to right, #18181b 80%, #0f0f12);
+  }
+
+  :global(.dark) .cover {
+    color: #ecfdf5;
+    background:
+      radial-gradient(circle farthest-corner at 80% 20%, #4ade8030 0%, #16653400 70%),
+      #052e16;
+  }
+
+  :global(.dark) .shot {
+    background: #09090b;
+    border-bottom-color: #ffffff1f;
+  }
+
+  :global(.dark) .nav-btn {
+    border-color: var(--color-zinc-700);
+  }
+
+  :global(.dark) .nav-btn:hover:not(:disabled) {
+    border-color: var(--color-accent-soft);
+    color: var(--color-accent-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .book,
+    .leaf {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-flipbook]').forEach((root) => {
+    const book = root.querySelector<HTMLElement>('.book')!;
+    const leaves = [...book.querySelectorAll<HTMLElement>('.leaf')];
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+    const last = leaves.length;
+    const projectCount = last - 1;
+
+    // Turn to leaf n: 0 shows the front cover, `last` the back cover, anything between opens that project's spread.
+    const goTo = (n: number) => {
+      const current = Math.max(0, Math.min(last, n));
+      book.style.setProperty('--c', String(current));
+      prev.disabled = current === 0;
+      next.disabled = current === last;
+      status.textContent = current === 0 ? 'Cover' : current === last ? 'The end' : `${current} / ${projectCount}`;
+      // Only the two visible faces take focus and clicks on their links.
+      leaves.forEach((leaf, i) => {
+        leaf.querySelector<HTMLElement>('.front')!.inert = i !== current;
+        leaf.querySelector<HTMLElement>('.back')!.inert = i !== current - 1;
+      });
+      return current;
+    };
+
+    let current = goTo(0);
+
+    leaves.forEach((leaf, i) => {
+      leaf.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) return;
+        // A turned leaf (left side) turns back, one still on the right turns over.
+        current = goTo(i < current ? i : i + 1);
+      });
+    });
+
+    prev.addEventListener('click', () => (current = goTo(current - 1)));
+    next.addEventListener('click', () => (current = goTo(current + 1)));
+    root.addEventListener('keydown', (e) => {
+      const target = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 0, End: last }[e.key];
+      if (target === undefined) return;
+      e.preventDefault();
+      current = goTo(target);
+    });
+  });
+</script>

@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import TechTags from './TechTags.astro';
+import { statusBadge } from '../data/status';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -12,15 +13,7 @@ interface Props {
 const { project, media = true } = Astro.props;
 const { title, subtitle, tagline, tech, status, cover } = project.data;
 
-const badge = {
-  live: null,
-  'in-progress': 'In progress',
-  'client-work': 'Client work',
-  'personal-project': 'Personal project',
-  'masters-thesis': "Master's thesis",
-  workshop: 'Workshop',
-  demo: 'Demo',
-}[status ?? 'live'];
+const badge = statusBadge[status ?? 'live'];
 ---
 
 <article class="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 transition hover:border-accent dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-accent-soft" data-reveal>
